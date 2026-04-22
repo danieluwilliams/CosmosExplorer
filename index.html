@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>COSMOS — Deep Space Explorer</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="styles.css"/>
+</head>
+
+<body>
+
+<canvas id="starfield"></canvas>
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<section id="intro">
+  <p class="eyebrow">NASA Image Archive &middot; Deep Space</p>
+  <h1><em>Cosmos</em><br>Explorer</h1>
+  <p>A guided journey through planets, nebulae, and the objects that define our universe — powered by NASA.</p>
+  <div class="scroll-hint">SCROLL TO EXPLORE</div>
+</section>
+
+<div id="search-zone">
+  <div id="search-wrap">
+    <input id="search-input"
+      type="text"
+      placeholder="Search any planet, nebula, star&hellip;"
+      autocomplete="off"/>
+    <button id="search-btn">SEARCH</button>
+  </div>
+  <div id="search-status"></div>
+  <div id="search-results"></div>
+</div>
+
+<div id="main"></div>
+
+<footer>
+  Images sourced live from <a href="https://images.nasa.gov" target="_blank">NASA Image &amp; Video Library</a><br>
+  &copy; 2025 Cosmos Explorer &mdash; educational use
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

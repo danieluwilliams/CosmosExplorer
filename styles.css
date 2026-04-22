@@ -1,0 +1,611 @@
+/* ═══════════════════════════════════════════════════
+   COSMOS EXPLORER — Complete Stylesheet
+   ═══════════════════════════════════════════════════ */
+
+/* ── Reset ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Design Tokens ── */
+:root {
+  --void:   #01010a;   /* page background — deep black */
+  --deep:   #050514;   /* slightly lighter black */
+  --mid:    #0c0c2a;   /* dark navy — used for NASA image placeholder bg */
+  --glow:   #7eb4ff;   /* blue glow — cursor, links, highlights */
+  --pale:   #c8d8f0;   /* light blue-white — primary text */
+  --muted:  #4a5a7a;   /* desaturated blue — secondary text, labels */
+  --accent: #ff9f5a;   /* warm orange — category badges */
+  --serif:  'Cormorant Garamond', Georgia, serif;
+  --mono:   'Space Mono', monospace;
+}
+
+/* ── Base ── */
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--void);
+  color: var(--pale);
+  font-family: var(--serif);
+  overflow-x: hidden;
+  cursor: none; /* hidden — replaced by custom cursor */
+}
+
+/* ═══════════════════════════════════════════════════
+   CUSTOM CURSOR
+   ═══════════════════════════════════════════════════ */
+
+#cursor {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--glow);
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: screen;
+}
+
+#cursor-ring {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid rgba(126, 180, 255, 0.4);
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* ═══════════════════════════════════════════════════
+   STARFIELD CANVAS
+   ═══════════════════════════════════════════════════ */
+
+#starfield {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════════
+   INTRO / HERO SECTION
+   ═══════════════════════════════════════════════════ */
+
+#intro {
+  position: relative;
+  z-index: 10;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 1.5rem;
+}
+
+#intro h1 {
+  font-family: var(--serif);
+  font-size: clamp(4rem, 12vw, 9rem);
+  font-weight: 300;
+  letter-spacing: 0.08em;
+  line-height: 0.9;
+  color: #fff;
+  text-shadow: 0 0 80px rgba(126, 180, 255, 0.3);
+}
+
+#intro h1 em {
+  font-style: italic;
+  color: var(--glow);
+}
+
+#intro p {
+  margin-top: 2rem;
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  max-width: 420px;
+}
+
+/* ── Scroll hint arrow ── */
+.scroll-hint {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  animation: fadeup 2.5s ease infinite;
+}
+
+.scroll-hint::after {
+  content: '';
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, var(--muted), transparent);
+}
+
+@keyframes fadeup {
+  0%, 100% {
+    opacity: 0.3;
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-6px);
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   COSMOS SECTIONS  (one per object)
+   ═══════════════════════════════════════════════════ */
+
+.cosmos-section {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 4rem;
+  gap: 4rem;
+  /* scroll-reveal starts hidden */
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 0.9s ease, transform 0.9s ease;
+}
+
+/* Every other section flips layout (planet right, text left) */
+.cosmos-section.even {
+  flex-direction: row-reverse;
+}
+
+/* Triggered by IntersectionObserver */
+.cosmos-section.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ═══════════════════════════════════════════════════
+   PLANET SCENE
+   ═══════════════════════════════════════════════════ */
+
+.planet-scene {
+  flex: 0 0 auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ambient colour bloom behind planet */
+.planet-glow {
+  position: absolute;
+  inset: -20%;
+  border-radius: 50%;
+  opacity: 0.08;          /* pulsed by JS when idle */
+  filter: blur(45px);
+  pointer-events: none;
+  transition: opacity 0.5s;
+}
+
+.planet-scene:hover .planet-glow {
+  opacity: 0.55;          /* intensifies on hover */
+}
+
+/* Ring system (Saturn / Jupiter) */
+.ring-wrap {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.13);
+  transform: rotateX(70deg) scaleY(0.35); /* perspective tilt */
+}
+
+.ring-outer {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* The canvas holding the drawn planet */
+.planet-canvas {
+  border-radius: 50%;
+  display: block;
+  position: relative;
+  z-index: 2;
+  cursor: none;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); /* springy pop */
+}
+
+.planet-scene:hover .planet-canvas {
+  transform: scale(1.07);
+}
+
+/* ═══════════════════════════════════════════════════
+   INFO PANEL
+   ═══════════════════════════════════════════════════ */
+
+.info-panel {
+  flex: 1;
+  max-width: 460px;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+/* "01 / 08" counter */
+.obj-number {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--muted);
+  margin-bottom: 1rem;
+}
+
+/* Object name — large serif */
+.info-panel h2 {
+  font-family: var(--serif);
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.35rem;
+  /* color set inline per object */
+}
+
+/* e.g. "GAS GIANT" */
+.obj-category {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+}
+
+/* Body description paragraph */
+.obj-desc {
+  font-size: 1.05rem;
+  font-weight: 300;
+  line-height: 1.85;
+  color: rgba(200, 216, 240, 0.72);
+  margin-bottom: 1.8rem;
+  border-left: 1px solid rgba(126, 180, 255, 0.2);
+  padding-left: 1.2rem;
+}
+
+/* ── Stats table ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;                                   /* gap acts as grid line colour */
+  background: rgba(255, 255, 255, 0.05);      /* grid line fill */
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 1.5rem;
+}
+
+.stat-cell {
+  background: var(--void);
+  padding: 0.85rem 1rem;
+}
+
+.stat-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-family: var(--serif);
+  font-size: 1.1rem;
+  color: var(--pale);
+}
+
+/* ── NASA image block ── */
+.nasa-block {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  position: relative;
+  background: var(--mid);  /* placeholder bg while loading */
+}
+
+.nasa-block img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+
+.nasa-block img.loaded {
+  opacity: 1;
+}
+
+/* Loading / error text centred over image area */
+.nasa-status {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  transition: opacity 0.4s;
+}
+
+/* Bottom-left label */
+.nasa-caption {
+  position: absolute;
+  bottom: 8px;
+  left: 10px;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: rgba(200, 216, 240, 0.4);
+}
+
+/* ═══════════════════════════════════════════════════
+   SECTION DIVIDER
+   ═══════════════════════════════════════════════════ */
+
+.divider {
+  position: relative;
+  z-index: 10;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.07),
+    transparent
+  );
+  margin: 0 6rem;
+}
+
+/* ═══════════════════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════════════════ */
+
+footer {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  padding: 4rem 2rem;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+  line-height: 2;
+}
+
+footer a {
+  color: var(--glow);
+  text-decoration: none;
+}
+
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE — MOBILE  (≤ 800px)
+   ═══════════════════════════════════════════════════ */
+
+@media (max-width: 800px) {
+
+  /* Stack planet above text on every section */
+  .cosmos-section,
+  .cosmos-section.even {
+    flex-direction: column !important;
+    padding: 4rem 1.5rem;
+    gap: 2.5rem;
+  }
+
+  .info-panel {
+    max-width: 100%;
+  }
+
+  .divider {
+    margin: 0 2rem;
+  }
+}
+
+/* ═══════════════════════════════════════════════════
+   SEARCH
+   ═══════════════════════════════════════════════════ */
+
+#search-zone {
+  position: relative;
+  z-index: 10;
+  padding: 3rem 4rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+#search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+  max-width: 580px;
+  border: 1px solid rgba(126,180,255,0.25);
+  background: rgba(5,5,20,0.85);
+  backdrop-filter: blur(8px);
+  transition: border-color 0.3s;
+}
+
+#search-wrap:focus-within {
+  border-color: rgba(126,180,255,0.7);
+}
+
+#search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0.95rem 1.2rem;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--pale);
+  caret-color: var(--glow);
+}
+
+#search-input::placeholder {
+  color: var(--muted);
+  letter-spacing: 0.1em;
+}
+
+#search-btn {
+  background: transparent;
+  border: none;
+  border-left: 1px solid rgba(126,180,255,0.2);
+  padding: 0.95rem 1.4rem;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  color: var(--glow);
+  cursor: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+#search-btn:hover {
+  background: rgba(126,180,255,0.1);
+  color: #fff;
+}
+
+#search-btn:disabled {
+  color: var(--muted);
+  cursor: not-allowed;
+}
+
+/* Status line */
+#search-status {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--muted);
+  min-height: 1.2em;
+  text-align: center;
+}
+
+#search-status.error { color: #ff6b6b; }
+#search-status.success { color: #5ae4c8; }
+
+/* Search result cards */
+#search-results {
+  width: 100%;
+  max-width: 680px;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.result-card {
+  background: rgba(5,5,20,0.7);
+  border: 1px solid rgba(255,255,255,0.06);
+  padding: 1rem 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  cursor: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.result-card:hover {
+  border-color: rgba(126,180,255,0.3);
+  background: rgba(15,15,40,0.9);
+}
+
+.result-card-name {
+  font-family: var(--serif);
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: var(--pale);
+}
+
+.result-card-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+.result-card-add {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--glow);
+  border: 1px solid rgba(126,180,255,0.3);
+  padding: 6px 14px;
+  background: transparent;
+  cursor: none;
+  white-space: nowrap;
+  transition: background 0.2s, color 0.2s;
+}
+
+.result-card-add:hover {
+  background: rgba(126,180,255,0.12);
+  color: #fff;
+}
+
+.result-card-add:disabled {
+  color: #5ae4c8;
+  border-color: rgba(90,228,200,0.3);
+  cursor: not-allowed;
+}
+
+/* Injected search sections get a subtle top accent */
+.cosmos-section.searched {
+  border-top: 1px solid rgba(126,180,255,0.08);
+}
+
+@media (max-width: 800px) {
+  #search-zone { padding: 2rem 1.5rem 1rem; }
+  #search-wrap { max-width: 100%; }
+}
+
+/* ── Streaming description cursor ── */
+.desc-cursor {
+  display: inline-block;
+  color: var(--glow);
+  animation: blink 0.8s step-end infinite;
+  font-family: var(--mono);
+  font-size: 0.85em;
+  margin-left: 1px;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
