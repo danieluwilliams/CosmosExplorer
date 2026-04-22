@@ -77,10 +77,9 @@ An interactive, visually immersive web experience that allows users to explore p
 This project demonstrates:
 
 * Strong JavaScript fundamentals
-* API integration skills
 * Frontend performance optimization
 * Creative UI/UX design
-* Ability to use AI to make projects more efficiently via prompt engineering
+* Utilized AI APIs to generate dynamic object descriptions in real time
 
 ---
 
